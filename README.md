@@ -1,8 +1,8 @@
 # Data-Driven Prioritization of Child Nutrition Interventions in Indonesia
 
-**Status: Phase 0 complete (v0.1.0) — all 7 datasets fetched and contract-validated**
+**Status: Phase 1 complete — one validated, merged province × year analytical table**
 
-Phase 0A (scaffold, data contracts, province reference layer, manifest/provenance system, validation framework, CI/CD, inventory generation) and Phase 0B (real dataset acquisition) are both done: all 7 datasets — poverty, IPM, population, education, expenditure, stunting, and province boundaries — are real, fetched, and pass their data contracts. `make validate` and the full test suite pass. See [docs/known_limitations.md](docs/known_limitations.md) for the structural limitations that remain (BPS variable choices, the manual stunting export, GADM's province vintage) even though ingestion itself is complete. Phase 1 (cleaning) has not started.
+Phase 0 (data acquisition and validation, `v0.1.0`) is done: all 7 datasets — poverty, IPM, population, education, expenditure, stunting, and province boundaries — are real, fetched, and pass their data contracts. Phase 1 (cleaning and reconciliation) is also done: all 6 non-geometry datasets are standardized, profiled for missingness, and merged into `data/processed/merged_provincial_indicators.csv`, documented end-to-end in [notebooks/02_cleaning.ipynb](notebooks/02_cleaning.ipynb). See [docs/known_limitations.md](docs/known_limitations.md) and [docs/province_reconciliation.md](docs/province_reconciliation.md) for the structural limitations and reconciliation decisions involved. Phase 2 (feature engineering) has not started.
 
 A policy-analytics decision-support project ranking Indonesian provinces by child-nutrition-intervention priority (e.g. for programs like Makan Bergizi Gratis), using public health, education, and socioeconomic indicators. This is not a dashboard project — it's an analytics engineering foundation: data contracts, provenance, and validation come before any analysis.
 
@@ -34,14 +34,18 @@ nutrition-analytics-indonesia/
 ├── data/{raw,interim,processed,external}/   never committed; always re-fetched
 ├── docs/
 │   ├── data_inventory.md          generated audit trail
-│   └── data_contracts/            per-dataset YAML schema contracts
-├── notebooks/           01_data_audit ... 05_geospatial (placeholders; phases 1+)
+│   ├── data_contracts/            per-dataset YAML schema contracts
+│   ├── known_limitations.md       structural limitations + alternatives investigated
+│   ├── province_reconciliation.md GADM 34-vs-38 + BPS publication-gap methodology
+│   └── missing_data_report.md     generated per-dataset missingness profile
+├── notebooks/           01_data_audit (placeholder) · 02_cleaning (Phase 1, executed) · 03-05 (placeholders; phases 2+)
 ├── src/
 │   ├── ingestion/       fetch scripts + orchestrator
-│   ├── reference/       province name standardization (single source of truth)
+│   ├── reference/       province name standardization (single source of truth) + GADM crosswalk
+│   ├── cleaning/        standardize.py, profile_missing.py, merge.py (Phase 1)
 │   ├── validation/      data-contract enforcement
 │   ├── utils/           HTTP retry, config, provenance/manifest
-│   └── cleaning/ features/ scoring/ visualization/   placeholders for later phases
+│   └── features/ scoring/ visualization/   placeholders for later phases
 ├── tests/               unit tests, no real network calls
 ├── .github/workflows/   CI: tests + contract validation
 └── reports/ dashboard/  placeholders for later phases
@@ -59,14 +63,18 @@ cp .env.example .env
 # Manually export the stunting crosstab (see known_limitations.md §3) to data/external/stunting_tableau_crosstab_2024.xlsx
 make fetch       # downloads the 6 scriptable datasets into data/raw/, builds the manifest
 python -m src.ingestion.fetch_stunting_ssgi --manual-xlsx data/external/stunting_tableau_crosstab_2024.xlsx
-make validate    # re-checks already-fetched data against docs/data_contracts/
-make inventory   # regenerates docs/data_inventory.md from the real manifest
-make test        # runs the unit test suite (no network required)
+make validate      # re-checks already-fetched data against docs/data_contracts/
+make inventory     # regenerates docs/data_inventory.md from the real manifest
+make clean-data    # profiles missingness (docs/missing_data_report.md) and builds data/processed/merged_provincial_indicators.csv
+make test          # runs the unit test suite (no network required)
 ```
 
 The 5 BPS-sourced datasets (poverty, IPM, population, education, expenditure) require your own free `BPS_API_KEY` — the BPS WebAPI rejects every request without one, including read-only list endpoints, and there is no scriptable way around that. `config/datasets.yml` already has the real, confirmed var ids (see [docs/known_limitations.md](docs/known_limitations.md) §2 for how they were found and verified) — `discover_bps_vars.py` is there if you ever need to re-derive one. Boundaries (GADM) work without any key. Stunting requires a manual crosstab export placed at `data/external/` and ingested with `--manual-xlsx`; see [docs/known_limitations.md](docs/known_limitations.md) §3 — re-fetching a future year means repeating that export.
 
 ## Roadmap
 
-- **Phase 0 (complete, v0.1.0):** scaffold, data contracts, province reference layer, provenance/manifest, validation framework, CI/CD, inventory generation, and all 7 real datasets fetched + contract-validated.
-- **Phase 1 (not started):** province reconciliation, cleaning, missing-value handling, a merged analytical dataset, and a cleaning notebook. No scoring, ranking, modeling, or dashboard yet.
+See [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md) for the full Phase 0–6 plan.
+
+- **Phase 0 (complete, `v0.1.0`):** scaffold, data contracts, province reference layer, provenance/manifest, validation framework, CI/CD, inventory generation, and all 7 real datasets fetched + contract-validated.
+- **Phase 1 (complete):** province reconciliation (3 distinct gap types documented in `docs/province_reconciliation.md`), per-dataset cleaning (`src/cleaning/standardize.py`), a missing-data report (`docs/missing_data_report.md`), and one merged, validated `province × year` table (`data/processed/merged_provincial_indicators.csv`), all documented in `notebooks/02_cleaning.ipynb`.
+- **Phase 2+ (not started):** feature engineering, the priority-scoring framework, geospatial analysis, the dashboard, and policy insights. No scoring, ranking, modeling, or dashboard work has been done yet.
