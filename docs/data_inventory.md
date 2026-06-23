@@ -6,7 +6,7 @@ Generated automatically from `data/raw/_manifest.jsonl`, `config/metadata.yml`, 
 |---|---|---|---|---|---|---|
 | Province Administrative Boundaries | GADM (derived from official boundary data) | gadm | province | 34 | passed | `data/raw/boundaries/boundaries_gadm/boundaries_gadm_2026-06-23T022012Z.geojson` |
 | School Participation Rate | BPS (Badan Pusat Statistik) | 2023 | province | 105 | passed | `data/raw/education/education_2026-06-23T022005Z.csv` |
-| Household Per-Capita Expenditure | BPS (Badan Pusat Statistik) | 2025 | province | 110 | passed | `data/raw/expenditure/expenditure_2026-06-23T022011Z.csv` |
+| Adjusted Per-Capita Expenditure | BPS (Badan Pusat Statistik) | 2025 | province | 110 | passed | `data/raw/expenditure/expenditure_2026-06-23T022011Z.csv` |
 | Human Development Index | BPS (Badan Pusat Statistik) | 2024 | province | 117 | passed | `data/raw/ipm/ipm_2026-06-23T021743Z.csv` |
 | Population | BPS (Badan Pusat Statistik) | 2020 | province | 105 | passed | `data/raw/population/population_2026-06-23T021750Z.csv` |
 | Poverty Rate | BPS (Badan Pusat Statistik) | 2025 | province | 78 | passed | `data/raw/poverty/poverty_2026-06-23T021741Z.csv` |
@@ -40,10 +40,10 @@ Generated automatically from `data/raw/_manifest.jsonl`, `config/metadata.yml`, 
 - **SHA-256:** `5b62a37dd370501a03e21fa32bab6f2f1e9f81b223d9f29d6f801150fe1a04d7`
 - **Validation status:** passed
 
-### Household Per-Capita Expenditure (`expenditure`)
+### Adjusted Per-Capita Expenditure (`expenditure`)
 
 - **Source organization & URL:** BPS (Badan Pusat Statistik) — https://www.bps.go.id/
-- **Unit:** IDR/month
+- **Unit:** thousand IDR/person/year (PPP-adjusted, IPM-component basis)
 - **Publication / fetch vintage:** 2025
 - **Fetched at (UTC):** 2026-06-23T02:20:11Z
 - **Geographic granularity:** Province
