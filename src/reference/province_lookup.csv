@@ -1,0 +1,50 @@
+canonical_name,bps_code,variant
+Aceh,1100,Aceh
+Sumatera Utara,1200,Sumatera Utara
+Sumatera Barat,1300,Sumatera Barat
+Riau,1400,Riau
+Jambi,1500,Jambi
+Sumatera Selatan,1600,Sumatera Selatan
+Bengkulu,1700,Bengkulu
+Lampung,1800,Lampung
+Kep. Bangka Belitung,1900,Kep. Bangka Belitung
+Kep. Bangka Belitung,1900,kepulauan bangka belitung
+Kep. Bangka Belitung,1900,bangka belitung
+Kep. Riau,2100,Kep. Riau
+Kep. Riau,2100,kepulauan riau
+Kep. Riau,2100,kep riau
+Dki Jakarta,3100,Dki Jakarta
+Dki Jakarta,3100,jakarta
+Dki Jakarta,3100,provinsi dki jakarta
+Jawa Barat,3200,Jawa Barat
+Jawa Tengah,3300,Jawa Tengah
+Di Yogyakarta,3400,Di Yogyakarta
+Di Yogyakarta,3400,yogyakarta
+Di Yogyakarta,3400,daerah istimewa yogyakarta
+Di Yogyakarta,3400,diy
+Jawa Timur,3500,Jawa Timur
+Banten,3600,Banten
+Bali,5100,Bali
+Nusa Tenggara Barat,5200,Nusa Tenggara Barat
+Nusa Tenggara Barat,5200,ntb
+Nusa Tenggara Timur,5300,Nusa Tenggara Timur
+Nusa Tenggara Timur,5300,ntt
+Kalimantan Barat,6100,Kalimantan Barat
+Kalimantan Tengah,6200,Kalimantan Tengah
+Kalimantan Selatan,6300,Kalimantan Selatan
+Kalimantan Timur,6400,Kalimantan Timur
+Kalimantan Utara,6500,Kalimantan Utara
+Sulawesi Utara,7100,Sulawesi Utara
+Sulawesi Tengah,7200,Sulawesi Tengah
+Sulawesi Selatan,7300,Sulawesi Selatan
+Sulawesi Tenggara,7400,Sulawesi Tenggara
+Gorontalo,7500,Gorontalo
+Sulawesi Barat,7600,Sulawesi Barat
+Maluku,8100,Maluku
+Maluku Utara,8200,Maluku Utara
+Papua Barat,9100,Papua Barat
+Papua Barat Daya,9200,Papua Barat Daya
+Papua,9400,Papua
+Papua Selatan,9500,Papua Selatan
+Papua Tengah,9600,Papua Tengah
+Papua Pegunungan,9700,Papua Pegunungan
