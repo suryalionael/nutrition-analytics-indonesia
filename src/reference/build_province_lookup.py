@@ -42,6 +42,7 @@ KNOWN_ALIASES: dict[str, str] = {
     "yogyakarta": "Di Yogyakarta",
     "daerah istimewa yogyakarta": "Di Yogyakarta",
     "diy": "Di Yogyakarta",
+    "d i yogyakarta": "Di Yogyakarta",  # real variant found in BPS expenditure (var 416) labels
     "kepulauan riau": "Kep. Riau",
     "kep riau": "Kep. Riau",
     "kepulauan bangka belitung": "Kep. Bangka Belitung",

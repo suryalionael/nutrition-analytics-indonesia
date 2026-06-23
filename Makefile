@@ -1,4 +1,4 @@
-.PHONY: install fetch validate inventory test
+.PHONY: install fetch validate inventory test missing-report merge clean-data
 
 install:
 	pip install -r requirements.txt
@@ -14,3 +14,11 @@ inventory:
 
 test:
 	pytest -v
+
+missing-report:
+	python -m src.cleaning.profile_missing
+
+merge:
+	python -m src.cleaning.merge
+
+clean-data: missing-report merge
