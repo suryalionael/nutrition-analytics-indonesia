@@ -8,7 +8,7 @@ A policy analytics and decision-support platform — not a one-off dashboard pro
 
 ## Current Status
 
-**Phase 3 in progress.** Phase 0 (`v0.1.0`) and Phase 1 are complete. Phase 2 (NPI methodology design) is complete — design documents only, no code. Phase 3 (`src/features/`, `src/scoring/`) is built and dry-run verified against real data: PCA loadings, variance explained, normalization diagnostics, and outlier review all computed (`docs/phase3_dry_run.md`); the missing-data policy is resolved (`docs/phase3_missing_data_decision.md`); validation procedures are designed but not yet executed (`docs/phase3_validation_design.md`). `pytest`: 37/37 PASS. **No province rankings, percentiles, or priority tiers exist yet** — publishing a ranking is a deliberately separate, not-yet-authorized step.
+**Phase 3 complete through validation.** Phase 0 (`v0.1.0`), Phase 1, and Phase 2 (NPI methodology design) are complete. Phase 3 (`src/features/`, `src/scoring/`) is built, dry-run verified (`docs/phase3_dry_run.md`), missing-data policy resolved (`docs/phase3_missing_data_decision.md`), and now validated against real data: outcome correlation (Spearman r = 0.72 overall, 0.63 for the 34 fully-covered provinces — both above the pre-registered 0.5 threshold), weight sensitivity (rank-stable across ±20%), leave-one-indicator-out (`poverty_rate` most influential, `participation_rate`'s removal causes the most top-4 churn despite weak raw correlation), and PCA stability (max loading shift 0.077 across 38 leave-one-province-out refits) — full detail in `docs/phase3_validation_results.md`. `pytest`: 44/44 PASS. **No province rankings, percentiles, or priority tiers exist yet** — publishing a ranking is a deliberately separate, not-yet-authorized step.
 
 ## Completed Milestones
 
@@ -57,13 +57,13 @@ See `docs/known_limitations.md`, `docs/province_reconciliation.md`, and `docs/ph
 - A hybrid weighting methodology — PCA within the collinear vulnerability trio, equal weighting across top-level dimensions — compared against equal/expert/pure-PCA alternatives (`docs/phase2_weighting_options.md`)
 - A sensitivity-analysis design and technical architecture for `src/features/`/`src/scoring/` (`docs/phase2_sensitivity_design.md`, `docs/phase2_technical_design.md`)
 
-## Phase 3 — Nutrition Priority Index (in progress)
+## Phase 3 — Nutrition Priority Index (complete through validation)
 
 - Missing-data policy resolved: renormalize dimension weights for the 4 partial-coverage provinces rather than exclude or fabricate (`docs/phase3_missing_data_decision.md`)
-- `src/features/` (directionality alignment, normalization, missing-value policy) and `src/scoring/` (PCA composite, NPI combination) built and tested (13 new tests)
+- `src/features/` (directionality alignment, normalization, missing-value policy) and `src/scoring/` (PCA composite, NPI combination, validation) built and tested (24 new tests across Phase 3A/3B)
 - Dry-run verified against real data: PCA loadings, 86.0% variance explained, normalization diagnostics, outlier review — no rankings produced (`docs/phase3_dry_run.md`)
-- Validation procedures fully specified against the real pipeline, not yet executed (`docs/phase3_validation_design.md`)
-- **Not yet done:** running validation, computing percentiles/tiers, publishing any ranking
+- Validated end-to-end against real data (`docs/phase3_validation_results.md`): outcome correlation passes the pre-registered threshold, rank order is stable across ±20% weight perturbation, `poverty_rate` confirmed as the most influential indicator by two independent methods, PCA basis confirmed stable across 38 leave-one-province-out refits
+- **Not yet done:** computing percentiles/tiers, publishing any ranking
 
 ## Phase 4 — Geospatial Analytics
 
