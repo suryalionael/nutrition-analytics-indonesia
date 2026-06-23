@@ -1,0 +1,17 @@
+# Hybrid weighting decision from docs/phase2_weighting_options.md.
+# Changing the methodology means editing this file (visible in git log), not code.
+
+dimension_weights:
+  socioeconomic_vulnerability: 0.5
+  education_access: 0.5
+
+socioeconomic_vulnerability_method:
+  type: pca
+  n_components: 1
+  svd_solver: full   # deterministic -- no randomized solver, per docs/phase2_technical_design.md
+
+# docs/phase3_missing_data_decision.md: when a province is missing a dimension
+# entirely (e.g. education_access has no participation_rate value), renormalize the
+# remaining available dimension weights for that province rather than imputing or
+# excluding it.
+missing_dimension_policy: renormalize
