@@ -23,8 +23,8 @@ education:
   source_name: BPS (Badan Pusat Statistik)
 
 expenditure:
-  display_name: Household Per-Capita Expenditure
-  unit: IDR/month
+  display_name: Adjusted Per-Capita Expenditure
+  unit: thousand IDR/person/year (PPP-adjusted, IPM-component basis)
   source_name: BPS (Badan Pusat Statistik)
 
 stunting:
