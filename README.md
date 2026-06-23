@@ -6,6 +6,8 @@ Phase 0A (scaffold, data contracts, province reference layer, manifest/provenanc
 
 A policy-analytics decision-support project ranking Indonesian provinces by child-nutrition-intervention priority (e.g. for programs like Makan Bergizi Gratis), using public health, education, and socioeconomic indicators. This is not a dashboard project — it's an analytics engineering foundation: data contracts, provenance, and validation come before any analysis.
 
+See [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md) for the full phase-by-phase plan (Phase 0 through Phase 6) and current status.
+
 ## No Synthetic Data — Ever
 
 Every dataset in this repository is real and publicly verifiable, sourced from BPS (Statistics Indonesia), Kemenkes/TP2S, and GADM/BIG. If a source is unreachable, authentication fails, or a source's structure changes, ingestion **fails loudly and exits non-zero** — it never falls back to mock, generated, or cached-fake data. See [docs/data_inventory.md](docs/data_inventory.md) for the full audit trail of what was actually fetched, when, and from where.
