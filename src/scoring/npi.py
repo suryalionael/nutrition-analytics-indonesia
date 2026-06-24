@@ -49,19 +49,37 @@ def compute_npi(
     uses that one normalized indicator directly as the Socioeconomic Vulnerability
     score -- the "pick one representative indicator" alternative compared in
     docs/phase2_weighting_options.md and evaluated for real in
-    docs/phase3_methodology_comparison.md. Mutually exclusive with
-    socioeconomic_columns (which controls the PCA-trio composition instead).
+    docs/phase3_methodology_comparison.md / docs/phase3_final_methodology_decision.md.
+    Mutually exclusive with socioeconomic_columns (which controls the PCA-trio
+    composition instead).
+
+    If NEITHER override is given, the method is read from
+    config/npi_weights.yml's socioeconomic_vulnerability_method.type -- currently
+    "single_indicator" (expenditure_per_capita), promoted to primary in Phase 3C.
+    The PCA-trio composite remains fully available by passing socioeconomic_columns
+    explicitly (used as the retained sensitivity benchmark in
+    src/scoring/validation.py and docs/phase4_ranking_results.md).
 
     Returns (result_df, diagnostics). result_df has one row per province: the two
     dimension scores, the combined npi score, the reach-modifier metric, and the
-    data_completeness flag -- no rank, percentile, or tier column.
+    data_completeness flag -- no rank, percentile, or tier column (see
+    src/scoring/ranking.py for that, built once ranking was explicitly authorized
+    in Phase 4).
     """
     npi_config = load_npi_weights()
     directionality_config = load_directionality_config()
-    socioeconomic_columns = socioeconomic_columns if socioeconomic_columns is not None else SOCIOECONOMIC_COLUMNS
     weights = dict(dimension_weights) if dimension_weights is not None else dict(npi_config["dimension_weights"])
     if not include_education:
         weights.pop("education_access", None)
+
+    if socioeconomic_columns is None and socioeconomic_single_indicator is None:
+        method_config = npi_config["socioeconomic_vulnerability_method"]
+        if method_config["type"] == "single_indicator":
+            socioeconomic_single_indicator = method_config["indicator"]
+        elif method_config["type"] == "pca":
+            socioeconomic_columns = npi_config.get("pca_benchmark", {}).get("columns", SOCIOECONOMIC_COLUMNS)
+        else:
+            raise ValueError(f"Unknown socioeconomic_vulnerability_method.type: {method_config['type']!r}")
 
     aligned = align_to_higher_is_worse(merged_df, directionality_config)
 
@@ -75,9 +93,9 @@ def compute_npi(
         pca_diag = {"method": "single_indicator", "indicator": socioeconomic_single_indicator}
     else:
         socio_input, socio_diag = min_max_scale(aligned, socioeconomic_columns)
-        pca_config = npi_config["socioeconomic_vulnerability_method"]
+        pca_benchmark_config = npi_config.get("pca_benchmark", {})
         socioeconomic_vulnerability, pca_diag = fit_pca_composite(
-            socio_input, socioeconomic_columns, n_components=pca_config["n_components"]
+            socio_input, socioeconomic_columns, n_components=pca_benchmark_config.get("n_components", 1)
         )
         pca_diag["method"] = "pca"
 

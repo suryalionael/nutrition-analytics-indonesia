@@ -37,11 +37,11 @@ null, rather than inferring a value (e.g. by splitting the old combined figure
 proportionally) — that would be a fabricated number, which this project's real-data
 rule forbids. This is documented in `docs/missing_data_report.md`.
 
-## 3. GADM boundary vintage gap (geometry issue — deferred to Phase 4, crosswalk provided now)
+## 3. GADM boundary vintage gap (geometry issue — deferred to Phase 5 (geospatial analysis), crosswalk provided now)
 
 `fetch_geo_boundaries.py`'s GADM source has only 34 province polygons (pre-2022 split).
-Phase 1 does not perform any geospatial join (that's Phase 4), so this gap does not
-affect the Phase 1 merged table. To prevent Phase 4 from re-discovering this issue or
+Phase 1 does not perform any geospatial join (that's Phase 5), so this gap does not
+affect the Phase 1 merged table. To prevent Phase 5 from re-discovering this issue or
 solving it with a silent inner join, the mapping from each new province to its GADM-34
 parent polygon is recorded now in `src/reference/province_gadm_crosswalk.csv`:
 
@@ -52,7 +52,7 @@ parent polygon is recorded now in `src/reference/province_gadm_crosswalk.csv`:
 | Papua Pegunungan | Papua | UU No. 16/2022 |
 | Papua Barat Daya | Papua Barat | UU No. 29/2022 |
 
-When Phase 4 joins statistical data to GADM geometry, it should `LEFT JOIN` through
+When Phase 5 joins statistical data to GADM geometry, it should `LEFT JOIN` through
 this crosswalk (new province → parent → GADM polygon) rather than joining directly on
 province name, so the four new provinces' statistics render on their parent's polygon
 (coarser, but real) instead of being silently dropped by a failed exact-name match.
