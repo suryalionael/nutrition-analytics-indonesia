@@ -8,7 +8,7 @@ A policy analytics and decision-support platform — not a one-off dashboard pro
 
 ## Current Status
 
-**Phase 4 complete.** Phase 0 (`v0.1.0`) through Phase 3 (scoring, validation, and an empirical methodology comparison that promoted `expenditure_per_capita`-only to primary over PCA) are done. Phase 4 generated the final province ranking, percentiles, and priority tiers (`data/processed/npi_rankings.csv`), comparing 4 tiering methods on real evidence and choosing Jenks natural breaks as primary. `pytest`: 57/57 PASS. **Key finding carried forward: rank order is highly robust to methodology choices, but Jenks tier labels are not** — full detail in `docs/phase4_ranking_results.md`. No geospatial analysis, dashboard, or policy recommendations exist yet.
+**Phase 5 complete.** Phase 0 (`v0.1.0`) through Phase 4 (the published province ranking and priority tiers, `data/processed/npi_rankings.csv`) are done. Phase 5 resolved the GADM 34-vs-38 geometry gap with a real, scriptable, distinct-geometry source for all 38 current provinces and ran global/local spatial autocorrelation plus a regional comparison: **global Moran's I = 0.622 (p = 0.001, 999-permutation test)**, and **all 6 Papua-region provinces form one statistically significant High-High LISA cluster** — independent confirmation of the same pattern Phase 4's ranking already surfaced. Eastern Indonesia's mean NPI is 2.5× Western's, confirmed significant by both ANOVA (p = 2.8×10⁻⁸) and Kruskal-Wallis (p = 8.1×10⁻⁵). `pytest`: 66/66 PASS. Full detail in `docs/phase5_spatial_results.md`. No dashboard or policy recommendations exist yet.
 
 ## Completed Milestones
 
@@ -25,14 +25,16 @@ A policy analytics and decision-support platform — not a one-off dashboard pro
 - A working, tested scoring pipeline (`src/features/`, `src/scoring/`) producing real per-province diagnostics (86.0% PCA variance explained, confirmed real outlier provinces)
 - An empirically-grounded final methodology choice: `expenditure_per_capita`-only outperformed PCA on every decision-matrix criterion tested, promoted to primary with PCA retained as a documented sensitivity benchmark (`docs/phase3_final_methodology_decision.md`)
 - A published province ranking, percentile, and priority tier (`data/processed/npi_rankings.csv`), with 4 tiering methods compared on real evidence (`docs/phase4_ranking_design.md`) and a major stability finding documented before being treated as fact (`docs/phase4_ranking_results.md`)
+- A real, scriptable, distinct-geometry source found for all 38 current provinces (`docs/phase5_geometry_reconciliation.md`), superseding the Phase 0 GADM-crosswalk duplicate-geometry workaround for spatial statistics specifically
+- Confirmed, statistically robust spatial structure behind the ranking: strong global autocorrelation, a significant 6-province Papua High-High cluster, and a regional disparity confirmed by two independent significance tests — not asserted, computed (`docs/phase5_spatial_results.md`)
 
 ## Upcoming Milestone
 
-**Geospatial analysis (Phase 5)**: province-level choropleth mapping of the published ranking, hotspot analysis, and regional clustering — gated behind resolving the GADM 34-vs-38 province boundary gap documented in `docs/province_reconciliation.md`.
+**Dashboard (Phase 6)**: a Streamlit application built and verified end-to-end as code, plus a Power BI implementation guide, presenting the validated ranking and spatial findings from Phases 4-5.
 
 ## Known Limitations
 
-See `docs/known_limitations.md`, `docs/province_reconciliation.md`, and `docs/phase3_missing_data_decision.md` for full detail. Headlines: GADM boundaries reflect 34 of Indonesia's 38 current provinces (missing the 2022 Papua splits); stunting has no scriptable source and requires a manual export to refresh; the education indicator uses a single age band (7-12) since BPS publishes no all-ages total; `population` and `participation_rate` are missing for the 4 newest Papua provinces because BPS has not yet republished those two series for them (handled via per-province dimension-weight renormalization, not imputation).
+See `docs/known_limitations.md`, `docs/province_reconciliation.md`, `docs/phase3_missing_data_decision.md`, and `docs/phase5_spatial_results.md` for full detail. Headlines: stunting has no scriptable source and requires a manual export to refresh; the education indicator uses a single age band (7-12) since BPS publishes no all-ages total; `population` and `participation_rate` are missing for the 4 newest Papua provinces because BPS has not yet republished those two series for them (handled via per-province dimension-weight renormalization, not imputation); the NPI's correlation with real stunting outcomes is weaker once the Papua provinces are set aside, a caveat that also underlies the Phase 5 spatial cluster finding.
 
 ---
 
@@ -74,12 +76,15 @@ See `docs/known_limitations.md`, `docs/province_reconciliation.md`, and `docs/ph
 - Final published ranking: `data/processed/npi_rankings.csv` (38 provinces, rank, percentile, all 4 tier methods, PCA benchmark score, tier-boundary-ambiguity flag)
 - **Major finding documented before being treated as settled**: rank order is highly robust to weight/methodology perturbation (Spearman r consistently > 0.99), but Jenks tier *labels* are not — recomputing breakpoints on slightly shifted data reclassified up to 76% of provinces in testing, because adaptive natural-breaks refitting can mask real score movement that a fixed threshold would reveal (`docs/phase4_ranking_results.md`)
 
-## Phase 5 — Geospatial Analytics
+## Phase 5 — Geospatial Analytics ✅
 
-- Province-level choropleth mapping of the published ranking
-- Hotspot analysis for high-priority regions
-- Regional clustering to identify province archetypes
-- Must first resolve the GADM 34-vs-38 province boundary gap (`docs/province_reconciliation.md`)
+- Resolved the GADM 34-vs-38 province boundary gap for spatial analysis: found a real, scriptable, distinct-geometry source for all 38 current provinces, superseding the duplicate-geometry crosswalk workaround (`docs/phase5_geometry_reconciliation.md`)
+- Validated spatial dataset (`data/processed/npi_spatial.geojson`): unique province count, geometry validity, CRS consistency, join completeness
+- Global spatial autocorrelation: Moran's I = 0.622, p = 0.001 (999-permutation test) — strong, statistically significant clustering
+- Local autocorrelation (LISA): all 6 Papua-region provinces form one significant High-High cluster; an 8-province Java-centered Low-Low cluster (`reports/maps/lisa_clusters.png`)
+- Regional analysis using Indonesia's official WIB/WITA/WIT time zones as Western/Central/Eastern: Eastern Indonesia's mean NPI is 2.5× Western's, confirmed by both ANOVA and Kruskal-Wallis (p < 0.0001 each); every "Critical"-tier province is in Eastern Indonesia
+- Spatial robustness confirmed across neighbor definitions (KNN k=4/6/8, Queen contiguity) and the province-reconciliation choice (real geometry vs. the original GADM crosswalk) — the clustering finding holds across all tested configurations
+- 4 maps generated (`reports/maps/`); 9 new tests
 
 ## Phase 6 — Dashboard
 
