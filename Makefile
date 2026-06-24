@@ -1,4 +1,4 @@
-.PHONY: install fetch validate inventory test missing-report merge clean-data
+.PHONY: install fetch validate inventory test missing-report merge clean-data rankings
 
 install:
 	pip install -r requirements.txt
@@ -22,3 +22,6 @@ merge:
 	python -m src.cleaning.merge
 
 clean-data: missing-report merge
+
+rankings:
+	python -m src.scoring.build_rankings

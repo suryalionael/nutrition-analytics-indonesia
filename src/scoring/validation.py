@@ -101,10 +101,15 @@ def weight_sensitivity_grid(merged_df: pd.DataFrame, base_weights: dict, perturb
 
 def leave_one_indicator_out(merged_df: pd.DataFrame, base_weights: dict, top_n: int = 4) -> dict:
     """Recomputes the NPI once per input indicator, with that indicator removed, and
-    reports stability metrics against the full-indicator baseline. For the 3
-    socioeconomic-trio indicators, also reports how much PCA variance-explained
-    changes with that indicator gone."""
-    baseline, baseline_diag = compute_npi(merged_df, dimension_weights=base_weights)
+    reports stability metrics against the full-indicator baseline. This function
+    specifically exercises the PCA-trio benchmark (docs/phase3_final_methodology_
+    decision.md retains it for exactly this kind of cross-check) -- it explicitly
+    requests socioeconomic_columns=SOCIOECONOMIC_COLUMNS rather than relying on
+    compute_npi's config-driven default (expenditure-only as of Phase 3C), since
+    LOIO on a single-indicator dimension is meaningless (there's nothing left to
+    drop to). For the 3 socioeconomic-trio indicators, also reports how much PCA
+    variance-explained changes with that indicator gone."""
+    baseline, baseline_diag = compute_npi(merged_df, dimension_weights=base_weights, socioeconomic_columns=SOCIOECONOMIC_COLUMNS)
     results = {}
 
     for dropped in SOCIOECONOMIC_COLUMNS:
@@ -115,7 +120,7 @@ def leave_one_indicator_out(merged_df: pd.DataFrame, base_weights: dict, top_n: 
         metrics["variance_explained_without_indicator"] = variant_diag["pca"]["variance_explained"]
         results[dropped] = metrics
 
-    variant, _ = compute_npi(merged_df, dimension_weights=base_weights, include_education=False)
+    variant, _ = compute_npi(merged_df, dimension_weights=base_weights, socioeconomic_columns=SOCIOECONOMIC_COLUMNS, include_education=False)
     results[EDUCATION_COLUMN] = _stability_metrics(baseline, variant, top_n)
 
     return results
@@ -165,4 +170,32 @@ def pca_leave_one_province_out(normalized_df: pd.DataFrame, columns: list[str]) 
         "most_influential_province": most_influential["excluded_province"],
         "most_influential_loading_shift": float(most_influential["loading_shift_l2"]),
         "per_province_detail": loo_df,
+    }
+
+
+def tier_stability(baseline_df: pd.DataFrame, variant_df: pd.DataFrame, tier_fn, score_col: str = "npi") -> dict:
+    """Applies the same tiering method (a function from src/scoring/ranking.py, e.g.
+    tier_jenks) to two scored DataFrames and reports how many provinces change tier
+    membership -- a robustness question distinct from rank-order stability, since a
+    province can shift several ranks without crossing a tier boundary, or shift one
+    rank right across one."""
+    baseline_tiers, tier_meta = tier_fn(baseline_df, score_col)
+    variant_tiers, _ = tier_fn(variant_df, score_col)
+
+    merged = pd.DataFrame(
+        {
+            "province": baseline_df["province"],
+            "tier_base": baseline_tiers,
+            "tier_variant": variant_tiers,
+        }
+    ).dropna()
+
+    changed = merged.loc[merged["tier_base"] != merged["tier_variant"]]
+
+    return {
+        "method": tier_meta["method"],
+        "n_compared": len(merged),
+        "n_changed": len(changed),
+        "stable_fraction": 1 - len(changed) / len(merged) if len(merged) else float("nan"),
+        "changed_provinces": changed[["province", "tier_base", "tier_variant"]].to_dict(orient="records"),
     }
