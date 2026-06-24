@@ -1,0 +1,39 @@
+province,local_i,local_p_sim,lisa_cluster
+Aceh,0.07213578301091843,0.205,Not significant
+Bali,0.4799337633861961,0.065,Not significant
+Banten,0.3492388228664387,0.033,Low-Low
+Bengkulu,0.12732802506834265,0.289,Not significant
+Di Yogyakarta,0.7306179844164683,0.003,Low-Low
+Dki Jakarta,0.9381424375361277,0.019,Low-Low
+Gorontalo,0.017852999317262776,0.825,Not significant
+Jambi,0.12103215162821104,0.277,Not significant
+Jawa Barat,0.2838200813062102,0.003,Low-Low
+Jawa Tengah,0.3747585929461459,0.003,Low-Low
+Jawa Timur,0.31098069819251456,0.055,Not significant
+Kalimantan Barat,-0.005441919182710748,0.109,Not significant
+Kalimantan Selatan,0.2155887949486175,0.277,Not significant
+Kalimantan Tengah,0.10171709306883964,0.481,Not significant
+Kalimantan Timur,0.09340271520368142,0.763,Not significant
+Kalimantan Utara,0.007831252428471222,0.589,Not significant
+Kep. Bangka Belitung,0.4287104148550134,0.009,Low-Low
+Kep. Riau,0.36222955869432155,0.225,Not significant
+Lampung,0.1828032587799471,0.027,Low-Low
+Maluku,0.01660839182956286,0.077,Not significant
+Maluku Utara,0.04485703268441594,0.393,Not significant
+Nusa Tenggara Barat,0.1053529448168528,0.327,Not significant
+Nusa Tenggara Timur,-0.09427149801694912,0.589,Not significant
+Papua,3.559355173972873,0.003,High-High
+Papua Barat,0.5485667906055494,0.003,High-High
+Papua Barat Daya,1.6202316329380226,0.033,High-High
+Papua Pegunungan,4.549645492766221,0.003,High-High
+Papua Selatan,2.9562523868574138,0.003,High-High
+Papua Tengah,3.7861404804204084,0.003,High-High
+Riau,0.16066413968063425,0.195,Not significant
+Sulawesi Barat,-0.037295011522919926,0.417,Not significant
+Sulawesi Selatan,0.07190967095326288,0.729,Not significant
+Sulawesi Tengah,-0.011389033468603978,0.519,Not significant
+Sulawesi Tenggara,0.007589459355354769,0.877,Not significant
+Sulawesi Utara,0.025194739279129102,0.877,Not significant
+Sumatera Barat,0.15506629783908915,0.187,Not significant
+Sumatera Selatan,0.23403644108635857,0.025,Low-Low
+Sumatera Utara,0.1215496952864195,0.225,Not significant

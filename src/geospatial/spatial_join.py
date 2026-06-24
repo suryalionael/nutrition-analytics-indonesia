@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 OUTPUT_PATH = PROCESSED_DIR / "npi_spatial.geojson"
 
-OUTPUT_COLUMNS = ["province", "rank", "percentile", "npi", "tier_jenks", "tier_boundary_flag", "geometry"]
+OUTPUT_COLUMNS = ["province", "rank", "percentile", "npi", "tier_jenks", "tier_boundary_flag", "stunting_rate", "stunting_category", "geometry"]
 
 
 class SpatialJoinValidationError(Exception):

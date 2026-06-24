@@ -55,6 +55,31 @@ def test_local_morans_i_flags_high_high_cluster():
     assert all(int(p.split("_")[1]) < 3 for p in high_high["province"])
 
 
+def test_build_spatial_dataset_happy_path_includes_dashboard_columns():
+    # Regression test: caught by manually driving the dashboard in a browser --
+    # the map page's tooltips need stunting_rate/stunting_category, which an
+    # earlier version of OUTPUT_COLUMNS omitted, causing a runtime KeyError only
+    # visible once a full, 38-province, matching join actually completed (a
+    # smaller fixture never reaches the column-selection step at all, since
+    # validate_spatial_dataset enforces exactly 38 unique provinces).
+    provinces = [f"P{i}" for i in range(38)]
+    boundaries = gpd.GeoDataFrame({"province": provinces, "geometry": [box(i, 0, i + 1, 1) for i in range(38)]}, crs="EPSG:4326")
+    rankings = pd.DataFrame(
+        {
+            "province": provinces,
+            "rank": range(1, 39),
+            "percentile": [100.0] * 38,
+            "npi": [0.5] * 38,
+            "tier_jenks": ["High"] * 38,
+            "tier_boundary_flag": [False] * 38,
+            "stunting_rate": [30.0] * 38,
+            "stunting_category": ["high"] * 38,
+        }
+    )
+    result = build_spatial_dataset(rankings, boundaries)
+    assert {"stunting_rate", "stunting_category"}.issubset(result.columns)
+
+
 def test_spatial_join_validation_rejects_incomplete_join():
     boundaries = gpd.GeoDataFrame(
         {"province": ["A", "B", "C"], "geometry": [box(0, 0, 1, 1), box(1, 0, 2, 1), box(2, 0, 3, 1)]}, crs="EPSG:4326"
