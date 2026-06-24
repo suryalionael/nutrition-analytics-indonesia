@@ -8,7 +8,7 @@ A policy analytics and decision-support platform — not a one-off dashboard pro
 
 ## Current Status
 
-**Phase 5 complete.** Phase 0 (`v0.1.0`) through Phase 4 (the published province ranking and priority tiers, `data/processed/npi_rankings.csv`) are done. Phase 5 resolved the GADM 34-vs-38 geometry gap with a real, scriptable, distinct-geometry source for all 38 current provinces and ran global/local spatial autocorrelation plus a regional comparison: **global Moran's I = 0.622 (p = 0.001, 999-permutation test)**, and **all 6 Papua-region provinces form one statistically significant High-High LISA cluster** — independent confirmation of the same pattern Phase 4's ranking already surfaced. Eastern Indonesia's mean NPI is 2.5× Western's, confirmed significant by both ANOVA (p = 2.8×10⁻⁸) and Kruskal-Wallis (p = 8.1×10⁻⁵). `pytest`: 66/66 PASS. Full detail in `docs/phase5_spatial_results.md`. No dashboard or policy recommendations exist yet.
+**Phase 6 complete.** Phase 0 (`v0.1.0`) through Phase 5 (spatial analysis, `docs/phase5_spatial_results.md`) are done. Phase 6 transformed the project into a recruiter-facing analytics platform: a 6-page Streamlit dashboard (Executive Overview, Priority Ranking Explorer, Interactive Map, Province Profile, Methodology, Robustness & Uncertainty) reading from a committed presentation-layer data snapshot (`dashboard/data/`) so it runs with zero API keys; a full README overhaul; portfolio docs (`docs/executive_summary.md`, `docs/recruiter_guide.md`, `docs/project_highlights.md`, `docs/resume_bullets.md`); 3 generated architecture/pipeline/methodology diagrams plus 6 verified dashboard screenshots (`reports/portfolio_assets/`); and `DEPLOYMENT.md` for local + Streamlit Cloud deployment. `pytest`: 67/67 PASS — no methodology changed in this phase. No policy recommendations exist yet (Phase 7).
 
 ## Completed Milestones
 
@@ -27,10 +27,12 @@ A policy analytics and decision-support platform — not a one-off dashboard pro
 - A published province ranking, percentile, and priority tier (`data/processed/npi_rankings.csv`), with 4 tiering methods compared on real evidence (`docs/phase4_ranking_design.md`) and a major stability finding documented before being treated as fact (`docs/phase4_ranking_results.md`)
 - A real, scriptable, distinct-geometry source found for all 38 current provinces (`docs/phase5_geometry_reconciliation.md`), superseding the Phase 0 GADM-crosswalk duplicate-geometry workaround for spatial statistics specifically
 - Confirmed, statistically robust spatial structure behind the ranking: strong global autocorrelation, a significant 6-province Papua High-High cluster, and a regional disparity confirmed by two independent significance tests — not asserted, computed (`docs/phase5_spatial_results.md`)
+- A 6-page Streamlit dashboard, verified end-to-end in a real browser (not just imported and assumed to work), reading from a committed presentation snapshot so it requires zero API keys to view (`dashboard/`, `DEPLOYMENT.md`)
+- Full portfolio packaging: an executive summary, a recruiter guide, quantified project highlights, role-specific resume bullets, and a README rewritten around problem/methodology/validation/findings rather than implementation chronology
 
 ## Upcoming Milestone
 
-**Dashboard (Phase 6)**: a Streamlit application built and verified end-to-end as code, plus a Power BI implementation guide, presenting the validated ranking and spatial findings from Phases 4-5.
+**Policy Insights (Phase 7)**: intervention recommendations grounded in the validated priority index, an executive-summary PDF, and a full policy report for public-health or government audiences.
 
 ## Known Limitations
 
@@ -86,10 +88,16 @@ See `docs/known_limitations.md`, `docs/province_reconciliation.md`, `docs/phase3
 - Spatial robustness confirmed across neighbor definitions (KNN k=4/6/8, Queen contiguity) and the province-reconciliation choice (real geometry vs. the original GADM crosswalk) — the clustering finding holds across all tested configurations
 - 4 maps generated (`reports/maps/`); 9 new tests
 
-## Phase 6 — Dashboard
+## Phase 6 — Production Dashboard & Portfolio Packaging ✅
 
-- A Streamlit application (built and verified end-to-end as code)
-- A Power BI implementation guide (specification for manual build, since `.pbix` files can't be authored or tested programmatically)
+- A 6-page Streamlit dashboard (Executive Overview, Priority Ranking Explorer, Interactive Map, Province Profile, Methodology, Robustness & Uncertainty), driven and screenshotted in a real headless browser, not just launched and assumed correct — caught and fixed 2 real bugs this way (a missing tooltip column, a misleading delta color on a non-directional indicator)
+- `dashboard/prepare_data.py`: a committed presentation-layer data snapshot (`dashboard/data/`) recomputed from real, already-validated pipeline output — viewing the dashboard needs zero API keys or manual exports, while `data/raw/`/`data/processed/` stay gitignored per this project's standing reproducibility rules
+- 3 generated architecture/pipeline/methodology diagrams plus 6 verified dashboard screenshots (`reports/portfolio_assets/`)
+- Portfolio packaging: `docs/executive_summary.md`, `docs/recruiter_guide.md`, `docs/project_highlights.md`, `docs/resume_bullets.md` (4 role-specific versions)
+- README rewritten to portfolio standard (problem → methodology → validation → spatial analysis → findings → dashboard → reproducibility → future work)
+- `DEPLOYMENT.md`: local + Streamlit Community Cloud deployment instructions
+- A Power BI implementation guide was considered and intentionally not built: the dashboard requirements (search/filter/CSV export, switchable choropleth views, per-province drill-down) are all delivered in the verified Streamlit app, and a `.pbix` file can't be authored or tested programmatically — duplicating the same content in an unverifiable format wasn't worth it for this phase
+- No methodology, ranking, or scoring logic was changed in this phase — confirmed by an unchanged `pytest` count (67/67) aside from one new regression test
 
 ## Phase 7 — Policy Insights
 
