@@ -63,3 +63,14 @@ def test_compute_npi_runs_against_real_config_with_renormalization(synthetic_mer
     assert result.loc[0, "npi"] == 0.0
     assert not pd.isna(result.loc[0, "socioeconomic_vulnerability"])
     assert not pd.isna(result.loc[0, "education_access"])
+
+
+def test_compute_npi_single_indicator_bypasses_pca(synthetic_merged_df):
+    result, diagnostics = compute_npi(synthetic_merged_df, socioeconomic_single_indicator="poverty_rate")
+
+    assert diagnostics["pca"] == {"method": "single_indicator", "indicator": "poverty_rate"}
+    # poverty_rate is monotonically increasing A->E and is the sole driver of this
+    # dimension now, so socioeconomic_vulnerability should be monotonically increasing too.
+    assert result["socioeconomic_vulnerability"].is_monotonic_increasing
+    assert result["socioeconomic_vulnerability"].iloc[0] == 0.0
+    assert result["socioeconomic_vulnerability"].iloc[-1] == 1.0
