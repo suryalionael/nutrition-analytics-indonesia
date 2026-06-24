@@ -1,4 +1,4 @@
-.PHONY: install fetch validate inventory test missing-report merge clean-data rankings
+.PHONY: install fetch validate inventory test missing-report merge clean-data rankings fetch-boundaries spatial
 
 install:
 	pip install -r requirements.txt
@@ -25,3 +25,9 @@ clean-data: missing-report merge
 
 rankings:
 	python -m src.scoring.build_rankings
+
+fetch-boundaries:
+	python -m src.ingestion.fetch_geo_boundaries --source big_mirror
+
+spatial:
+	python -m src.geospatial.build_spatial_outputs

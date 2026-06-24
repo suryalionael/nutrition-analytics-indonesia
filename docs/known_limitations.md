@@ -131,6 +131,17 @@ authoritative.
 It requires a free human registration at <https://tanahair.indonesia.go.id/portal-web/unduh>
 that cannot be scripted, so it is not the default.
 
+**Resolved in Phase 5, for spatial analysis specifically:** a public GitHub mirror
+(`dmxsan/indonesia-admin-boundaries`) republishes BIG's official shapefiles as 38
+separate, genuinely distinct per-province GeoJSON files -- the same authoritative
+source as `--source big`, but scriptable, with no registration wall. Added as
+`fetch_geo_boundaries.py --source big_mirror` and used as the geometry source for
+Phase 5's spatial statistics (`docs/phase5_geometry_reconciliation.md`), which
+specifically needed distinct (not duplicated) geometry per province. GADM remains
+the default for `make fetch` (Phase 0's unattended end-to-end reproducibility
+goal), since `big_mirror`'s ~500MB raw download is heavier and only needed when
+genuine geometric distinctness matters.
+
 ## 5. Manual-acquisition requirements summary
 
 All 7 datasets are now fetched and contract-validated (Phase 0B complete). Two steps

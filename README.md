@@ -1,8 +1,8 @@
 # Data-Driven Prioritization of Child Nutrition Interventions in Indonesia
 
-**Status: Phase 4 complete — province rankings and priority tiers published**
+**Status: Phase 5 complete — spatial analysis confirms real, significant geographic clustering**
 
-Phase 0 (data acquisition, `v0.1.0`), Phase 1 (cleaning), Phase 2 (NPI design), and Phase 3 (scoring + validation + methodology comparison) are done. Phase 3C promoted `expenditure_per_capita`-only to the primary methodology (PCA retained as a benchmark — [docs/phase3_final_methodology_decision.md](docs/phase3_final_methodology_decision.md)). Phase 4 generated the final ranking: [data/processed/npi_rankings.csv](data/processed/npi_rankings.csv), with rank, percentile, and 4 evidence-compared priority-tier methods ([docs/phase4_ranking_design.md](docs/phase4_ranking_design.md), [docs/phase4_ranking_results.md](docs/phase4_ranking_results.md)). **Important finding:** rank order is highly robust to methodology/weight choices, but Jenks tier *labels* are not — recomputing breakpoints on slightly different data reclassifies up to 76% of provinces even when rank correlation stays above 0.99; read the results doc before treating any tier label as load-bearing. See [docs/known_limitations.md](docs/known_limitations.md) and [docs/province_reconciliation.md](docs/province_reconciliation.md) for structural limitations.
+Phase 0 (data acquisition, `v0.1.0`) through Phase 4 (rankings and priority tiers — [data/processed/npi_rankings.csv](data/processed/npi_rankings.csv)) are done. Phase 5 resolved the GADM 34-vs-38 geometry gap with a real, distinct-geometry source for all 38 current provinces ([docs/phase5_geometry_reconciliation.md](docs/phase5_geometry_reconciliation.md)) and ran global/local spatial autocorrelation plus a regional comparison: **global Moran's I = 0.622 (p = 0.001), and all 6 Papua-region provinces form one statistically significant High-High LISA cluster** — independent confirmation, via a different statistical method, of the same pattern Phase 4's ranking already surfaced. Eastern Indonesia's mean NPI is 2.5× Western's (ANOVA p = 2.8×10⁻⁸). Full results: [docs/phase5_spatial_results.md](docs/phase5_spatial_results.md). See [docs/known_limitations.md](docs/known_limitations.md) and [docs/province_reconciliation.md](docs/province_reconciliation.md) for structural limitations, and [docs/phase4_ranking_results.md](docs/phase4_ranking_results.md) for the important rank-vs-tier-stability finding carried into this phase.
 
 A policy-analytics decision-support project ranking Indonesian provinces by child-nutrition-intervention priority (e.g. for programs like Makan Bergizi Gratis), using public health, education, and socioeconomic indicators. This is not a dashboard project — it's an analytics engineering foundation: data contracts, provenance, and validation come before any analysis.
 
@@ -36,19 +36,24 @@ nutrition-analytics-indonesia/
 │   ├── data_inventory.md          generated audit trail
 │   ├── data_contracts/            per-dataset YAML schema contracts
 │   ├── known_limitations.md       structural limitations + alternatives investigated
-│   ├── province_reconciliation.md GADM 34-vs-38 + BPS publication-gap methodology
-│   └── missing_data_report.md     generated per-dataset missingness profile
-├── notebooks/           01_data_audit (placeholder) · 02_cleaning (Phase 1, executed) · 03-05 (placeholders; phases 2+)
+│   ├── province_reconciliation.md GADM 34-vs-38 + BPS publication-gap methodology (Phase 0/1)
+│   ├── missing_data_report.md     generated per-dataset missingness profile
+│   └── phase2_*.md phase3_*.md phase4_*.md phase5_*.md   per-phase design/results docs
+├── notebooks/           01_data_audit (placeholder) · 02_cleaning (Phase 1, executed) · 03-05 (placeholders; phase 6+)
 ├── src/
-│   ├── ingestion/       fetch scripts + orchestrator
+│   ├── ingestion/       fetch scripts + orchestrator (incl. fetch_geo_boundaries.py --source big_mirror, Phase 5)
 │   ├── reference/       province name standardization (single source of truth) + GADM crosswalk
 │   ├── cleaning/        standardize.py, profile_missing.py, merge.py (Phase 1)
+│   ├── features/        directionality, normalization, missing-value policy (Phase 3)
+│   ├── scoring/         PCA/single-indicator composites, NPI, ranking, validation (Phases 3-4)
+│   ├── geospatial/      boundaries, spatial join, Moran's I/LISA, regions, maps (Phase 5)
 │   ├── validation/      data-contract enforcement
 │   ├── utils/           HTTP retry, config, provenance/manifest
-│   └── features/ scoring/ visualization/   placeholders for later phases
+│   └── visualization/   placeholder for later phases
 ├── tests/               unit tests, no real network calls
 ├── .github/workflows/   CI: tests + contract validation
-└── reports/ dashboard/  placeholders for later phases
+├── reports/maps/        generated spatial diagnostic maps (Phase 5)
+└── dashboard/           placeholder for later phases
 ```
 
 ## Setup & Reproducibility
@@ -66,6 +71,9 @@ python -m src.ingestion.fetch_stunting_ssgi --manual-xlsx data/external/stunting
 make validate      # re-checks already-fetched data against docs/data_contracts/
 make inventory     # regenerates docs/data_inventory.md from the real manifest
 make clean-data    # profiles missingness (docs/missing_data_report.md) and builds data/processed/merged_provincial_indicators.csv
+make rankings      # builds data/processed/npi_rankings.csv (Phase 4)
+make fetch-boundaries  # downloads real, distinct 38-province geometry (Phase 5; ~500MB raw download)
+make spatial       # builds data/processed/npi_spatial.geojson, Moran's I/LISA, regional tests, maps (Phase 5)
 make test          # runs the unit test suite (no network required)
 ```
 
@@ -80,4 +88,5 @@ See [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md) for the full Phase 0–6 plan.
 - **Phase 2 (complete, design only):** NPI methodology design — indicator audit, dimensional framework, weighting methodology comparison, sensitivity-analysis design, technical architecture (`docs/phase2_*.md`). No code.
 - **Phase 3 (complete):** `src/features/` and `src/scoring/` built, dry-run verified, validated (`docs/phase3_validation_results.md`), and the primary methodology empirically chosen via a 4-way comparison (`docs/phase3_methodology_comparison.md`, `docs/phase3_final_methodology_decision.md`).
 - **Phase 4 (complete):** province rankings, percentiles, and priority tiers published (`data/processed/npi_rankings.csv`), with 4 tiering methods compared on real evidence and tier-stability explicitly flagged as the weaker link compared to rank stability (`docs/phase4_ranking_design.md`, `docs/phase4_ranking_results.md`).
-- **Phase 5+ (not started):** geospatial analysis, the dashboard, and policy insights.
+- **Phase 5 (complete):** geometry reconciliation with a real distinct-geometry source for all 38 provinces, spatial join (`data/processed/npi_spatial.geojson`), global/local Moran's I, regional disparity testing, spatial robustness checks, and 4 maps (`reports/maps/`) — full results in `docs/phase5_spatial_results.md`.
+- **Phase 6+ (not started):** the dashboard and policy insights.

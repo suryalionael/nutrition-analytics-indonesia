@@ -1,51 +1,82 @@
 canonical_name,bps_code,variant
 Aceh,1100,Aceh
 Sumatera Utara,1200,Sumatera Utara
+Sumatera Utara,1200,SumateraUtara
 Sumatera Barat,1300,Sumatera Barat
+Sumatera Barat,1300,SumateraBarat
 Riau,1400,Riau
 Jambi,1500,Jambi
 Sumatera Selatan,1600,Sumatera Selatan
+Sumatera Selatan,1600,SumateraSelatan
 Bengkulu,1700,Bengkulu
 Lampung,1800,Lampung
 Kep. Bangka Belitung,1900,Kep. Bangka Belitung
 Kep. Bangka Belitung,1900,kepulauan bangka belitung
 Kep. Bangka Belitung,1900,bangka belitung
+Kep. Bangka Belitung,1900,bangkabelitung
+Kep. Bangka Belitung,1900,KepBangkaBelitung
 Kep. Riau,2100,Kep. Riau
 Kep. Riau,2100,kepulauan riau
 Kep. Riau,2100,kep riau
+Kep. Riau,2100,kepulauanriau
+Kep. Riau,2100,KepRiau
 Dki Jakarta,3100,Dki Jakarta
 Dki Jakarta,3100,jakarta
 Dki Jakarta,3100,provinsi dki jakarta
+Dki Jakarta,3100,jakartaraya
+Dki Jakarta,3100,DkiJakarta
 Jawa Barat,3200,Jawa Barat
+Jawa Barat,3200,JawaBarat
 Jawa Tengah,3300,Jawa Tengah
+Jawa Tengah,3300,JawaTengah
 Di Yogyakarta,3400,Di Yogyakarta
 Di Yogyakarta,3400,yogyakarta
 Di Yogyakarta,3400,daerah istimewa yogyakarta
 Di Yogyakarta,3400,diy
 Di Yogyakarta,3400,d i yogyakarta
+Di Yogyakarta,3400,DiYogyakarta
 Jawa Timur,3500,Jawa Timur
+Jawa Timur,3500,JawaTimur
 Banten,3600,Banten
 Bali,5100,Bali
 Nusa Tenggara Barat,5200,Nusa Tenggara Barat
 Nusa Tenggara Barat,5200,ntb
+Nusa Tenggara Barat,5200,NusaTenggaraBarat
 Nusa Tenggara Timur,5300,Nusa Tenggara Timur
 Nusa Tenggara Timur,5300,ntt
+Nusa Tenggara Timur,5300,NusaTenggaraTimur
 Kalimantan Barat,6100,Kalimantan Barat
+Kalimantan Barat,6100,KalimantanBarat
 Kalimantan Tengah,6200,Kalimantan Tengah
+Kalimantan Tengah,6200,KalimantanTengah
 Kalimantan Selatan,6300,Kalimantan Selatan
+Kalimantan Selatan,6300,KalimantanSelatan
 Kalimantan Timur,6400,Kalimantan Timur
+Kalimantan Timur,6400,KalimantanTimur
 Kalimantan Utara,6500,Kalimantan Utara
+Kalimantan Utara,6500,KalimantanUtara
 Sulawesi Utara,7100,Sulawesi Utara
+Sulawesi Utara,7100,SulawesiUtara
 Sulawesi Tengah,7200,Sulawesi Tengah
+Sulawesi Tengah,7200,SulawesiTengah
 Sulawesi Selatan,7300,Sulawesi Selatan
+Sulawesi Selatan,7300,SulawesiSelatan
 Sulawesi Tenggara,7400,Sulawesi Tenggara
+Sulawesi Tenggara,7400,SulawesiTenggara
 Gorontalo,7500,Gorontalo
 Sulawesi Barat,7600,Sulawesi Barat
+Sulawesi Barat,7600,SulawesiBarat
 Maluku,8100,Maluku
 Maluku Utara,8200,Maluku Utara
+Maluku Utara,8200,MalukuUtara
 Papua Barat,9100,Papua Barat
+Papua Barat,9100,PapuaBarat
 Papua Barat Daya,9200,Papua Barat Daya
+Papua Barat Daya,9200,PapuaBaratDaya
 Papua,9400,Papua
 Papua Selatan,9500,Papua Selatan
+Papua Selatan,9500,PapuaSelatan
 Papua Tengah,9600,Papua Tengah
+Papua Tengah,9600,PapuaTengah
 Papua Pegunungan,9700,Papua Pegunungan
+Papua Pegunungan,9700,PapuaPegunungan

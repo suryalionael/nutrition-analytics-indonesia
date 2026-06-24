@@ -43,10 +43,13 @@ KNOWN_ALIASES: dict[str, str] = {
     "daerah istimewa yogyakarta": "Di Yogyakarta",
     "diy": "Di Yogyakarta",
     "d i yogyakarta": "Di Yogyakarta",  # real variant found in BPS expenditure (var 416) labels
+    "jakartaraya": "Dki Jakarta",  # real variant found in GADM's NAME_1
     "kepulauan riau": "Kep. Riau",
     "kep riau": "Kep. Riau",
+    "kepulauanriau": "Kep. Riau",  # real variant found in GADM's NAME_1 (no space)
     "kepulauan bangka belitung": "Kep. Bangka Belitung",
     "bangka belitung": "Kep. Bangka Belitung",
+    "bangkabelitung": "Kep. Bangka Belitung",  # real variant found in GADM's NAME_1 (no space)
     "nusa tenggara barat": "Nusa Tenggara Barat",
     "ntb": "Nusa Tenggara Barat",
     "nusa tenggara timur": "Nusa Tenggara Timur",
@@ -71,6 +74,15 @@ def build_lookup() -> list[dict]:
         for alias, target in KNOWN_ALIASES.items():
             if target == canonical and alias != canonical.lower():
                 rows.append({"canonical_name": canonical, "bps_code": p["val"], "variant": alias})
+
+        # GADM's NAME_1 property concatenates most province names with no separator
+        # (e.g. "JawaBarat") -- register this squashed form generically. Provinces
+        # where GADM uses a different word order/abbreviation entirely (DKI Jakarta,
+        # the "Kep." provinces) are confirmed individually in KNOWN_ALIASES instead,
+        # since no generic rule matches GADM's naming for those.
+        squashed = canonical.replace(" ", "").replace(".", "")
+        if squashed.lower() != canonical.lower():
+            rows.append({"canonical_name": canonical, "bps_code": p["val"], "variant": squashed})
     return rows
 
 
