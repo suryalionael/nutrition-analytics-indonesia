@@ -36,6 +36,7 @@ def compute_npi(
     dimension_weights: dict | None = None,
     socioeconomic_columns: list[str] | None = None,
     include_education: bool = True,
+    socioeconomic_single_indicator: str | None = None,
 ) -> tuple[pd.DataFrame, dict]:
     """merged_df: data/processed/merged_provincial_indicators.csv, loaded.
 
@@ -43,6 +44,13 @@ def compute_npi(
     (src/scoring/validation.py) recompute under a perturbed weighting or a dropped
     indicator without writing temporary config files -- they default to this
     project's actual configured methodology, never silently change it.
+
+    socioeconomic_single_indicator (e.g. "poverty_rate") bypasses PCA entirely and
+    uses that one normalized indicator directly as the Socioeconomic Vulnerability
+    score -- the "pick one representative indicator" alternative compared in
+    docs/phase2_weighting_options.md and evaluated for real in
+    docs/phase3_methodology_comparison.md. Mutually exclusive with
+    socioeconomic_columns (which controls the PCA-trio composition instead).
 
     Returns (result_df, diagnostics). result_df has one row per province: the two
     dimension scores, the combined npi score, the reach-modifier metric, and the
@@ -57,22 +65,28 @@ def compute_npi(
 
     aligned = align_to_higher_is_worse(merged_df, directionality_config)
 
-    socio_input, socio_diag = min_max_scale(aligned, socioeconomic_columns)
     edu_diag = {}
     if include_education:
         edu_input, edu_diag = min_max_scale(aligned, [EDUCATION_COLUMN])
 
-    pca_config = npi_config["socioeconomic_vulnerability_method"]
-    socioeconomic_vulnerability, pca_diag = fit_pca_composite(
-        socio_input, socioeconomic_columns, n_components=pca_config["n_components"]
-    )
+    if socioeconomic_single_indicator is not None:
+        socio_input, socio_diag = min_max_scale(aligned, [socioeconomic_single_indicator])
+        socioeconomic_vulnerability = socio_input[socioeconomic_single_indicator]
+        pca_diag = {"method": "single_indicator", "indicator": socioeconomic_single_indicator}
+    else:
+        socio_input, socio_diag = min_max_scale(aligned, socioeconomic_columns)
+        pca_config = npi_config["socioeconomic_vulnerability_method"]
+        socioeconomic_vulnerability, pca_diag = fit_pca_composite(
+            socio_input, socioeconomic_columns, n_components=pca_config["n_components"]
+        )
+        pca_diag["method"] = "pca"
 
-    # Rescale the PCA composite to [0, 1] for interpretability alongside education_access,
-    # which is already on a [0, 1] scale from min_max_scale.
-    socioeconomic_vulnerability, socio_pca_scale_diag = min_max_scale(
-        pd.DataFrame({"socioeconomic_vulnerability": socioeconomic_vulnerability}), ["socioeconomic_vulnerability"]
-    )
-    socioeconomic_vulnerability = socioeconomic_vulnerability["socioeconomic_vulnerability"]
+        # Rescale the PCA composite to [0, 1] for interpretability alongside education_access,
+        # which is already on a [0, 1] scale from min_max_scale.
+        socioeconomic_vulnerability, socio_pca_scale_diag = min_max_scale(
+            pd.DataFrame({"socioeconomic_vulnerability": socioeconomic_vulnerability}), ["socioeconomic_vulnerability"]
+        )
+        socioeconomic_vulnerability = socioeconomic_vulnerability["socioeconomic_vulnerability"]
 
     dimension_scores = pd.DataFrame({"socioeconomic_vulnerability": socioeconomic_vulnerability}, index=merged_df.index)
     if include_education:
